@@ -1,0 +1,133 @@
+---
+services:
+  overseerr:
+    image: lscr.io/linuxserver/overseerr:latest
+    container_name: ${CONTAINER_NAME_PREFIX}overseerr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TIME_ZONE}
+    volumes:
+      - ${HOME_DIR}/apps/overseerr:/config
+    ports:
+      - 5055:5055
+    restart: unless-stopped
+    networks:
+      - home_network
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: ${CONTAINER_NAME_PREFIX}radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TIME_ZONE}
+    volumes:
+      - ${HOME_DIR}/apps/radarr:/config
+      - ${HOME_DIR}/media/movies:/movies
+      - ${HOME_DIR}/downloads:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+    networks:
+      - home_network
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: ${CONTAINER_NAME_PREFIX}sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TIME_ZONE}
+    volumes:
+      - ${HOME_DIR}/apps/sonarr:/config
+      - ${HOME_DIR}/media/tv:/tv
+      - ${HOME_DIR}/downloads:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+    networks:
+      - home_network
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: ${CONTAINER_NAME_PREFIX}prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TIME_ZONE}
+    volumes:
+      - ${HOME_DIR}/apps/prowlarr:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+    networks:
+      - home_network
+
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: ${CONTAINER_NAME_PREFIX}plex
+    ports:
+      - 32400:32400
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TIME_ZONE}
+      - VERSION=docker
+      - PLEX_CLAIM= #optional
+    volumes:
+      - ${HOME_DIR}/apps/plex:/config
+      - ${HOME_DIR}/media/tv:/tv
+      - ${HOME_DIR}/media/movies:/movies
+    restart: unless-stopped
+    networks:
+      - home_network
+
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: ${CONTAINER_NAME_PREFIX}transmission
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TIME_ZONE}
+      - TRANSMISSION_WEB_HOME= #optional
+      - USER= #optional
+      - PASS= #optional
+      - WHITELIST= #optional
+      - PEERPORT= #optional
+      - HOST_WHITELIST= #optional
+    volumes:
+      - ${HOME_DIR}/apps/transmission:/config
+      - ${HOME_DIR}/downloads:/downloads
+      - ${HOME_DIR}/torrents:/watch
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
+    networks:
+      - home_network
+
+  # homeassistant:
+  #   image: ghcr.io/home-assistant/home-assistant:stable
+  #   container_name: ${CONTAINER_NAME_PREFIX}homeassistant
+
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=${TIME_ZONE}
+  #   volumes:
+  #     - ${HOME_DIR}/apps/homeassistant:/config
+  #   ports:
+  #     - 8123:8123
+  #   #devices:
+  #   #- /path/to/device:/path/to/device #optional
+  #   restart: unless-stopped
+  #   privileged: true
+  #   networks:
+  #     - home_network
+
+networks:
+  home_network:
+    name: home_network
+    driver: bridge
