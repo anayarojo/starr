@@ -19,7 +19,7 @@ Start by creating the following volumes to mount:
 
 <img width="241" height="385" alt="image" src="https://github.com/user-attachments/assets/4966bdee-4b56-4e79-b0cf-d09a8b86f16d" />
 
-Your env file will only contain these variables:
+Rename `.env.example` file to `.env` and enter the following variables:
 
 - `CONTAINER_NAME_PREFIX=starr_`
 - `HOME_DIR=/Users/joseestrada/home` (you can add a different unit, or directory under your main disk)
